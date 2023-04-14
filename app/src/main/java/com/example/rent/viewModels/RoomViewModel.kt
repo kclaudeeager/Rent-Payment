@@ -19,6 +19,12 @@ class RoomViewModel @Inject constructor(
     private val _rooms: MutableLiveData<List<Room>> = MutableLiveData()
     val rooms: LiveData<List<Room>>
         get() = _rooms
+    private val _availableRooms: MutableLiveData<List<Room>> = MutableLiveData()
+    val availableRooms: LiveData<List<Room>>
+        get() = _availableRooms
+    private val _occupiedRooms: MutableLiveData<List<Room>> = MutableLiveData()
+    val occupiedRooms: LiveData<List<Room>>
+        get() = _occupiedRooms
 
     private val _invoices: MutableLiveData<List<Invoice>> = MutableLiveData()
     val invoices: LiveData<List<Invoice>>
@@ -31,7 +37,22 @@ class RoomViewModel @Inject constructor(
     fun getRooms() {
         coroutineScope.launch {
             val rooms = repository.getRooms()
+            println("Rooms: $rooms")
             _rooms.postValue(rooms)
+        }
+    }
+    fun getAvailableRooms() {
+        coroutineScope.launch {
+            val rooms = repository.getAvailableRooms()
+            println("Rooms: $rooms")
+            _availableRooms.postValue(rooms)
+        }
+    }
+    fun getOccupiedRooms() {
+        coroutineScope.launch {
+            val rooms = repository.getOccupiedRooms()
+            println("Rooms: $rooms")
+            _occupiedRooms.postValue(rooms)
         }
     }
 

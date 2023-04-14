@@ -20,7 +20,7 @@ interface ApiService {
     @GET("users/{userId}")
     suspend fun getUser(@Path("userId") userId: String): User
 
-    @POST("sign_in")
+    @POST("login")
     @FormUrlEncoded
     suspend fun login(@Field("username") username: String, @Field("password") password: String): Response<ResponseBody>
 }
