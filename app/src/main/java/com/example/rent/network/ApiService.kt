@@ -13,7 +13,8 @@ interface ApiService {
 
     @GET("invoices")
     suspend fun getInvoices(): List<Invoice>
-
+    @GET("due_invoices")
+    suspend fun getDueInvoices(@Query("date") date: String): List<Invoice>
     @GET("payments")
     suspend fun getPayments(): List<Payment>
 

@@ -5,6 +5,7 @@ import com.example.rent.data.repositories.UserRepository
 import com.example.rent.data.repositories.impl.RentalRepositoryImpl
 import com.example.rent.data.repositories.impl.UserRepositoryImpl
 import com.example.rent.network.ApiService
+import com.example.rent.viewModels.LoginViewModel
 import com.example.rent.viewModels.RoomViewModel
 import dagger.Module
 import dagger.Provides
@@ -40,10 +41,10 @@ object AppModule {
     @Provides
     fun provideApiService(): ApiService {
         return Retrofit.Builder()
-            .baseUrl("https://xode.rw/landlord/api/management.php/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(ApiService::class.java)
+             .baseUrl("https://xode.rw/landlord/api/management.php/")
+             .addConverterFactory(GsonConverterFactory.create())
+             .build()
+             .create(ApiService::class.java)
     }
     @Provides
     @Singleton
@@ -53,7 +54,11 @@ object AppModule {
     ): RoomViewModel {
         return RoomViewModel(repository, coroutineScope)
     }
-
+@Provides
+@Singleton
+fun provideLoginViewModel(userRepository: UserRepository):LoginViewModel{
+    return LoginViewModel(userRepository)
+}
 }
 
 

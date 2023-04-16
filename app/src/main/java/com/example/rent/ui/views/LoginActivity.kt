@@ -4,37 +4,49 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.Done
+import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material3.*
-import androidx.compose.material3.ExposedDropdownMenuDefaults.outlinedTextFieldColors
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.rent.R
 import com.example.rent.data.models.Screen
 import com.example.rent.data.repositories.UserRepository
 import com.example.rent.network.ApiService
 import com.example.rent.ui.theme.RentTheme
-import com.example.rent.ui.theme.White
 import com.example.rent.util.ApiServiceSingleton
 import com.example.rent.util.LoginResult
 import com.example.rent.util.LoginResultSingleton
 import com.example.rent.viewModels.LoginViewModel
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import dagger.hilt.EntryPoint
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginActivity:  ComponentActivity() {
-
+    //lateinit var apiService:ApiService
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -79,6 +91,7 @@ class LoginActivity:  ComponentActivity() {
 
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun LoginScreen(loginViewModel: LoginViewModel, navController: NavController) {
         var username by remember { mutableStateOf("") }
@@ -87,6 +100,22 @@ class LoginActivity:  ComponentActivity() {
         var loggingIn by remember { mutableStateOf(false) }
         var usernameError by remember { mutableStateOf("") }
         var passwordError by remember { mutableStateOf("") }
+        var isPasswordVisible by remember{
+            mutableStateOf(false)
+        }
+        val focusRequester = remember { FocusRequester() }
+        fun submitLoginForm() {
+            if (username.isNotEmpty() && password.isNotEmpty() && !loggingIn) {
+                usernameError = ""
+                passwordError = ""
+                loggingIn = true
+                loginViewModel.login(username, password)
+            } else {
+                usernameError = if (username.isEmpty()) "Username cannot be empty" else ""
+                passwordError = if (password.isEmpty()) "Password cannot be empty" else ""
+                loggingIn = false
+            }
+        }
         val textFieldColors = TextFieldDefaults.outlinedTextFieldColors(
                 textColor = Color.Black,
                 disabledTextColor = Color.Black.copy(alpha = 0.5f),
@@ -129,7 +158,11 @@ class LoginActivity:  ComponentActivity() {
                 modifier = Modifier.padding(16.dp),
                 placeholder = { Text("Enter Username") },
                 isError = usernameError.isNotEmpty(),
-                colors = textFieldColors
+                colors = textFieldColors,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Next
+                ),
             )
 
             if (usernameError.isNotEmpty()) {
@@ -147,13 +180,52 @@ class LoginActivity:  ComponentActivity() {
                 value = password,
                 onValueChange = { password = it },
                 label = { Text("Password") },
-                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Next,
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        submitLoginForm()
+                    },
+                    onNext = {
+                        submitLoginForm()
+                    }
+
+                ),
                 placeholder = { Text("Enter password") },
                 isError = passwordError.isNotEmpty(),
-                colors = textFieldColors
+                colors = textFieldColors,
+                singleLine = true,
+                visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    IconButton(onClick = {
+                        isPasswordVisible = !isPasswordVisible
+                    }) {
 
-                )
+                        val visibleIconAndText = Pair(
+                            first = Icons.Outlined.Visibility,
+                            second = stringResource(id = R.string.icon_password_visible)
+                        )
+
+                        val hiddenIconAndText = Pair(
+                            first = Icons.Default.VisibilityOff,
+                            second = stringResource(id = R.string.icon_password_hidden)
+                        )
+
+                        val passwordVisibilityIconAndText =
+                            if (isPasswordVisible) visibleIconAndText else hiddenIconAndText
+
+                        // Render Icon
+                        Icon(
+                            imageVector = passwordVisibilityIconAndText.first,
+                            contentDescription = passwordVisibilityIconAndText.second
+                        )
+                    }
+                }
+            )
+
             if (passwordError.isNotEmpty()) {
                 Text(
                     text = passwordError,
@@ -168,17 +240,7 @@ class LoginActivity:  ComponentActivity() {
             Button(
                 enabled = !loggingIn,
                 onClick = {
-                    if (username.isNotEmpty() && password.isNotEmpty() && !loggingIn) {
-                        usernameError = ""
-                        passwordError = ""
-                        loggingIn = true
-                        loginViewModel.login(username, password)
-                    } else {
-                        usernameError = if (username.isEmpty()) "Username cannot be empty" else ""
-                        passwordError = if (password.isEmpty()) "Password cannot be empty" else ""
-                        loggingIn = false
-                    }
-
+                    submitLoginForm()
                 },
                 modifier = Modifier.padding(16.dp)
             ) {
@@ -236,7 +298,9 @@ class LoginActivity:  ComponentActivity() {
             }
 
         }
+
     }
+
 
 
 }

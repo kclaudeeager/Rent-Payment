@@ -30,43 +30,96 @@ class RoomViewModel @Inject constructor(
     val invoices: LiveData<List<Invoice>>
         get() = _invoices
 
+    private val _dueInvoices: MutableLiveData<List<Invoice>> = MutableLiveData()
+    val dueInvoices: LiveData<List<Invoice>>
+        get() = _dueInvoices
+
     private val _payments: MutableLiveData<List<Payment>> = MutableLiveData()
     val payments: LiveData<List<Payment>>
         get() = _payments
 
     fun getRooms() {
         coroutineScope.launch {
-            val rooms = repository.getRooms()
-            println("Rooms: $rooms")
-            _rooms.postValue(rooms)
+
+            val result = kotlin.runCatching {
+                repository.getRooms()
+            }
+            result.onSuccess { rooms ->
+                _rooms.postValue(rooms)
+            }.onFailure {
+                it.printStackTrace()
+            }
+
         }
     }
     fun getAvailableRooms() {
         coroutineScope.launch {
-            val rooms = repository.getAvailableRooms()
-            println("Rooms: $rooms")
-            _availableRooms.postValue(rooms)
+            val result = kotlin.runCatching {
+                repository.getAvailableRooms()
+            }
+
+            result.onSuccess { rooms ->
+                _availableRooms.postValue(rooms)
+            }.onFailure {
+                it.printStackTrace()
+            }
+
         }
     }
     fun getOccupiedRooms() {
         coroutineScope.launch {
-            val rooms = repository.getOccupiedRooms()
-            println("Rooms: $rooms")
-            _occupiedRooms.postValue(rooms)
+            val result = kotlin.runCatching {
+                repository.getOccupiedRooms()
+            }
+            result.onSuccess { rooms ->
+                _occupiedRooms.postValue(rooms)
+            }.onFailure {
+                it.printStackTrace()
+            }
+
         }
     }
 
     fun getInvoices() {
         coroutineScope.launch {
-            val invoices = repository.getInvoices()
-            _invoices.postValue(invoices)
+            val result = kotlin.runCatching {
+                repository.getInvoices()
+            }
+            result.onSuccess { invoices ->
+                _invoices.postValue(invoices)
+            }.onFailure {
+                it.printStackTrace()
+            }
+
+        }
+    }
+    fun getDueInvoices(date:String) {
+        coroutineScope.launch {
+            val result = kotlin.runCatching {
+                repository.getDueInvoices(date = date)
+            }
+            result.onSuccess { invoices ->
+                _dueInvoices.postValue(invoices)
+                _dueInvoices.value?.let { println("Due invoices: ${it.size} at $date") }
+            }.onFailure {
+                it.printStackTrace()
+            }
+
         }
     }
 
     fun getPayments() {
         coroutineScope.launch {
-            val payments = repository.getPayments()
-            _payments.postValue(payments)
+            val result = kotlin.runCatching {
+                repository.getPayments()
+            }
+            result.onSuccess { payments ->
+                _payments.postValue(payments)
+            }.onFailure {
+                it.printStackTrace()
+            }
         }
     }
 }
+
+

@@ -29,12 +29,5 @@ class MyApp : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-
-        WorkManager.initialize(
-            this,
-            Configuration.Builder()
-                .setWorkerFactory(workerFactory)
-                .build()
-        )
     }
 }

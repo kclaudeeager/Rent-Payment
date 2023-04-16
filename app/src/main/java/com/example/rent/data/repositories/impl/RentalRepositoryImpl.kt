@@ -15,7 +15,12 @@ class RentalRepositoryImpl(private val apiService: ApiService) : RentalRepositor
             apiService.getRooms().filter { !it.isOccupied }
         }
     }
-
+    override suspend fun getDueInvoices(date:String): List<Invoice> {
+        // Call the API to get the list of invoices
+        return withContext(Dispatchers.IO) {
+             apiService.getDueInvoices(date)
+        }
+    }
     override suspend fun getOccupiedRooms(): List<Room> {
         return withContext(Dispatchers.IO) {
             apiService.getRooms().filter { it.isOccupied }

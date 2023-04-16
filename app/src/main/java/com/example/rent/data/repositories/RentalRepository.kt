@@ -22,6 +22,10 @@ open class RentalRepository(private val apiService: ApiService) {
         // Call the API to get the list of invoices
         return apiService.getInvoices()
     }
+    open suspend fun getDueInvoices(date:String): List<Invoice> {
+        // Call the API to get the list of invoices
+        return apiService.getDueInvoices(date)
+    }
 
     open suspend fun getPayments(): List<Payment> {
         // Call the API to get the list of payments
