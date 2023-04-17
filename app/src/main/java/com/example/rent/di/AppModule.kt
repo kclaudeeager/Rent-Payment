@@ -1,7 +1,6 @@
 package com.example.rent.di
 
 import com.example.rent.data.repositories.RentalRepository
-import com.example.rent.data.repositories.UserRepository
 import com.example.rent.data.repositories.impl.RentalRepositoryImpl
 import com.example.rent.data.repositories.impl.UserRepositoryImpl
 import com.example.rent.network.ApiService
@@ -24,7 +23,7 @@ import javax.inject.Singleton
 object AppModule {
 
     @Provides
-    fun provideRentalRepository(apiService: ApiService): RentalRepository {
+    fun provideRentalRepository(apiService: ApiService): RentalRepositoryImpl {
         return RentalRepositoryImpl(apiService)
     }
 
@@ -34,7 +33,7 @@ object AppModule {
     }
 
     @Provides
-    fun provideUserRepository(apiService: ApiService): UserRepository {
+    fun provideUserRepository(apiService: ApiService): UserRepositoryImpl {
         return UserRepositoryImpl(apiService)
     }
 
@@ -49,14 +48,14 @@ object AppModule {
     @Provides
     @Singleton
     fun provideRoomViewModel(
-        repository: RentalRepository,
+        repository: RentalRepositoryImpl,
         coroutineScope: CoroutineScope
     ): RoomViewModel {
         return RoomViewModel(repository, coroutineScope)
     }
 @Provides
 @Singleton
-fun provideLoginViewModel(userRepository: UserRepository):LoginViewModel{
+fun provideLoginViewModel(userRepository: UserRepositoryImpl):LoginViewModel{
     return LoginViewModel(userRepository)
 }
 }

@@ -6,12 +6,14 @@ import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import com.example.rent.data.repositories.RentalRepository
 import com.example.rent.data.repositories.UserRepository
+import com.example.rent.data.repositories.impl.RentalRepositoryImpl
+import com.example.rent.data.repositories.impl.UserRepositoryImpl
 import com.example.rent.network.ApiService
 import javax.inject.Inject
 
 class CustomWorkerFactory @Inject constructor(
-    private val rentalRepository: RentalRepository,
-    private val userRepository: UserRepository,
+    private val rentalRepository: RentalRepositoryImpl,
+    private val userRepository: UserRepositoryImpl,
     private val apiService: ApiService
 ) : WorkerFactory() {
 

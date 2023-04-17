@@ -6,13 +6,15 @@ import androidx.lifecycle.ViewModel
 import com.example.rent.data.models.Invoice
 import com.example.rent.data.models.Payment
 import com.example.rent.data.models.Room
-import com.example.rent.data.repositories.RentalRepository
+import com.example.rent.data.models.User
+import com.example.rent.data.repositories.impl.RentalRepositoryImpl
+import com.example.rent.util.UserSingleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RoomViewModel @Inject constructor(
-    private val repository: RentalRepository,
+    private val repository: RentalRepositoryImpl,
     private val coroutineScope: CoroutineScope
 ) : ViewModel() {
 
@@ -37,12 +39,18 @@ class RoomViewModel @Inject constructor(
     private val _payments: MutableLiveData<List<Payment>> = MutableLiveData()
     val payments: LiveData<List<Payment>>
         get() = _payments
+   private val _duePayments: MutableLiveData<List<Payment>> = MutableLiveData()
+    val duePayments : LiveData<List<Payment>>
+    get() = _duePayments
+
+    var user: User? =UserSingleton.user
+
 
     fun getRooms() {
         coroutineScope.launch {
 
             val result = kotlin.runCatching {
-                repository.getRooms()
+                user?.let { repository.getRooms(it.co_id) }
             }
             result.onSuccess { rooms ->
                 _rooms.postValue(rooms)
@@ -55,7 +63,7 @@ class RoomViewModel @Inject constructor(
     fun getAvailableRooms() {
         coroutineScope.launch {
             val result = kotlin.runCatching {
-                repository.getAvailableRooms()
+                user?.let { repository.getAvailableRooms(it.co_id) }
             }
 
             result.onSuccess { rooms ->
@@ -69,7 +77,7 @@ class RoomViewModel @Inject constructor(
     fun getOccupiedRooms() {
         coroutineScope.launch {
             val result = kotlin.runCatching {
-                repository.getOccupiedRooms()
+              user?.let { repository.getOccupiedRooms(it.co_id) }
             }
             result.onSuccess { rooms ->
                 _occupiedRooms.postValue(rooms)
@@ -83,7 +91,7 @@ class RoomViewModel @Inject constructor(
     fun getInvoices() {
         coroutineScope.launch {
             val result = kotlin.runCatching {
-                repository.getInvoices()
+                user?.let {  repository.getInvoices(it.co_id)}
             }
             result.onSuccess { invoices ->
                 _invoices.postValue(invoices)
@@ -96,7 +104,9 @@ class RoomViewModel @Inject constructor(
     fun getDueInvoices(date:String) {
         coroutineScope.launch {
             val result = kotlin.runCatching {
-                repository.getDueInvoices(date = date)
+                user?.let {
+                    repository.getDueInvoices(companyId = it.co_id, date = date)
+                }
             }
             result.onSuccess { invoices ->
                 _dueInvoices.postValue(invoices)
@@ -111,10 +121,26 @@ class RoomViewModel @Inject constructor(
     fun getPayments() {
         coroutineScope.launch {
             val result = kotlin.runCatching {
-                repository.getPayments()
+                user?.let {
+                    repository.getPayments(it.co_id)
+                }
             }
             result.onSuccess { payments ->
                 _payments.postValue(payments)
+            }.onFailure {
+                it.printStackTrace()
+            }
+        }
+    }
+    fun getDuePayments(date:String) {
+        coroutineScope.launch {
+            val result = kotlin.runCatching {
+                user?.let {
+                    repository.getDuePayments(it.co_id,date)
+                }
+            }
+            result.onSuccess { payments ->
+                _duePayments.postValue(payments)
             }.onFailure {
                 it.printStackTrace()
             }

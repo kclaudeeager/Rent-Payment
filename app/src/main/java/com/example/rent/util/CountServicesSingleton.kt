@@ -10,5 +10,6 @@ import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 object CountServicesSingleton {
-    var selectedDate  by mutableStateOf(LocalDate.now())
+    var invoiceSelectedDate: LocalDate by mutableStateOf(LocalDate.now())
+    var paymentSelectedDate: LocalDate by mutableStateOf(LocalDate.now())
 }

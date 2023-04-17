@@ -1,17 +1,20 @@
 package com.example.rent.viewModels
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rent.data.repositories.UserRepository
+import com.example.rent.data.repositories.impl.UserRepositoryImpl
 import com.example.rent.util.LoginResult
 import com.example.rent.util.LoginResultSingleton
+import com.example.rent.util.UserSingleton
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.security.auth.login.LoginException
 
-class LoginViewModel @Inject constructor(private val userRepository: UserRepository) :
+class LoginViewModel @Inject constructor(private val userRepository: UserRepositoryImpl) :
     ViewModel() {
 
     private val _loginResult = MutableLiveData<LoginResult>()
@@ -26,7 +29,10 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
             result.onSuccess { user ->
                 if(user!=null) {
                     if (user.acc_id != null) {
-                        _loginResult.value = user.let { LoginResult.Success(it) }
+                        _loginResult.value = user.let {user->
+                            LoginResult.Success(user)
+                        }
+                        UserSingleton.user=user
                         loginResult.value?.let { LoginResultSingleton.setLoginResult(it) }
                     } else {
                         _loginResult.value = LoginResult.Error("Authentication error")
@@ -44,6 +50,10 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
             }
         }
     }
+fun logout(){
+    _loginResult.value=null
+    UserSingleton.user=null
+}
     fun resetLoginResult() {
         _loginResult.value=null
     }

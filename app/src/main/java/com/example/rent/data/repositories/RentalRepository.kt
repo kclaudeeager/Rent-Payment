@@ -6,33 +6,16 @@ import com.example.rent.data.models.Room
 
 import com.example.rent.network.ApiService
 
-open class RentalRepository(private val apiService: ApiService) {
+ interface RentalRepository{
 
-    open suspend fun getAvailableRooms(): List<Room> {
-        // Call the API to get the list of available rooms
-        return apiService.getRooms().filter { !it.isOccupied }
-    }
+    open suspend fun getAvailableRooms(companyId: String): List<Room>
 
-    open suspend fun getOccupiedRooms(): List<Room> {
-        // Call the API to get the list of occupied rooms
-        return apiService.getRooms().filter { it.isOccupied }
-    }
+    open suspend fun getOccupiedRooms(companyId: String): List<Room>
 
-    open suspend fun getInvoices(): List<Invoice> {
-        // Call the API to get the list of invoices
-        return apiService.getInvoices()
-    }
-    open suspend fun getDueInvoices(date:String): List<Invoice> {
-        // Call the API to get the list of invoices
-        return apiService.getDueInvoices(date)
-    }
+    open suspend fun getInvoices(companyId:String): List<Invoice>
+    open suspend fun getDueInvoices(companyId: String,date:String): List<Invoice>
 
-    open suspend fun getPayments(): List<Payment> {
-        // Call the API to get the list of payments
-        return apiService.getPayments()
-    }
-
-    open suspend fun getRooms(): List<Room>{
-    return  apiService.getRooms()
-    }
+    open suspend fun getPayments(companyId: String): List<Payment>
+    open suspend fun getDuePayments(companyId: String,date:String): List<Payment>
+    open suspend fun getRooms(companyId: String): List<Room>
 }
