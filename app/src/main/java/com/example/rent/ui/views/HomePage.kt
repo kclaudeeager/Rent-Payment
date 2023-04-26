@@ -1,9 +1,7 @@
 package com.example.rent.ui.views
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
@@ -35,49 +33,56 @@ fun HomeScreen(
         ) {
             item {
                 Box(
-                    modifier = Modifier.clickable {
-                        // Handle click for "All Rooms" item
-                    }
+                    modifier = Modifier
+                        .clickable {
+                            // Handle click for "All Rooms" item
+                        }
                 ) {
-                    roomsData["all"]?.let { AllRoomsScreen(it,navController) }
+                    roomsData["Total"]?.let { AllRoomsScreen(it, navController) }
                 }
             }
 
             item {
                 Box(
-                    modifier = Modifier.clickable {
-                        navController.navigate(Screen.AvailableRooms.route)
-                    }
+                    modifier = Modifier
+                        .clickable {
+                            navController.navigate(Screen.AvailableRooms.route)
+                        }
                 ) {
-                    roomsData["available"]?.let { AvailableRoomsScreen(it,navController) }
+                    roomsData["available"]?.let { AvailableRoomsScreen(it, navController) }
                 }
             }
             item {
                 Box(
-                    modifier = Modifier.clickable {
-                        navController.navigate(Screen.OccupiedRooms.route)
-                    }
+                    modifier = Modifier
+                        .clickable {
+                            navController.navigate(Screen.OccupiedRooms.route)
+                        }
                 ) {
-                    roomsData["occupied"]?.let { OccupiedRoomsScreen(it,navController) }
+                    roomsData["occupied"]?.let { OccupiedRoomsScreen(it, navController) }
                 }
             }
             item {
                 Box(
-                    modifier = Modifier.clickable {
-                        navController.navigate(Screen.Invoice.route)
-
-                    }
+                    modifier = Modifier
+                        .clickable {
+                            navController.navigate(Screen.Payments.route)
+                        }
                 ) {
-                    InvoiceScreen(invoices,navController)
+                    PaymentScreen(payments, navController)
                 }
             }
-            item { Box(
-                modifier = Modifier.clickable {
-                    navController.navigate(Screen.Payments.route)
+            item {
+                Box(
+                    modifier = Modifier
+                        .aspectRatio(1f)
+                        .width(300.dp)
+                        .clickable {
+                            navController.navigate(Screen.Invoice.route)
+                        }
+                ) {
+                    InvoiceScreen(invoices, navController)
                 }
-            ) {
-                PaymentScreen(payments,navController)
-            }
             }
 
         }

@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
-import com.example.rent.data.repositories.RentalRepository
-import com.example.rent.data.repositories.UserRepository
 import com.example.rent.data.repositories.impl.RentalRepositoryImpl
 import com.example.rent.data.repositories.impl.UserRepositoryImpl
 import com.example.rent.network.ApiService

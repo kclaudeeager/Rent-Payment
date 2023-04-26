@@ -89,7 +89,7 @@ fun MainScreen(screens: List<Screen>,loginViewModel: LoginViewModel) {
         Screen.Home to 0
     )
     val roomsData= mapOf(
-        "all" to rooms,
+        "Total" to rooms,
         "available" to availablerooms,
        "occupied" to occupiedRooms
     )
@@ -137,8 +137,7 @@ val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
                                 Row(verticalAlignment = Alignment.CenterVertically
                                     ) {
                                     Spacer(modifier =Modifier.padding(12.dp) )
-                                    Icon(Icons.Filled.House, contentDescription = "App Icon")
-                                    Text(text = "Rent Management App")
+                                    Text(text = "Rent Management")
                                 }
                             },
 
@@ -204,7 +203,7 @@ fun currentRoute(navController: NavController): String? {
 @Composable
 fun AllRoomsScreen(rooms:List<Room>, navController: NavHostController) {
     val iconColor = MaterialTheme.colorScheme.primary
-    CardInfoView(rooms.size,"All",Screen.Home.route,navController, icon = {Icon(
+    CardInfoView(rooms.size,"Total",Screen.Home.route,navController, icon = {Icon(
         imageVector = Icons.Filled.MoreVert,
         contentDescription = "Hotel icon",
         tint = iconColor,

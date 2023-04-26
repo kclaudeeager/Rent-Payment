@@ -47,7 +47,7 @@ fun ProfileDetails(user: User, onLogout:  () -> Unit) {
 
         Text(
             text = user.mobile,
-            style = MaterialTheme.typography.displaySmall,
+            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -37,6 +38,7 @@ fun BottomNavigationBar(
 
                                 Text(
                                     text = screen.title,
+                                    color= MaterialTheme.colorScheme.onBackground,
                                     fontWeight = FontWeight.SemiBold
                                 )
 
@@ -53,7 +55,7 @@ fun BottomNavigationBar(
                                                 text = count.toString(),
                                                 fontWeight = FontWeight.Normal,
                                                 fontSize = 12.sp,
-                                                color = MaterialTheme.colorScheme.outline
+                                                color = MaterialTheme.colorScheme.onPrimary
                                             )
                                         }
                                     }

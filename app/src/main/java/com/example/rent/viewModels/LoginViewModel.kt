@@ -10,10 +10,12 @@ import com.example.rent.data.repositories.impl.UserRepositoryImpl
 import com.example.rent.util.LoginResult
 import com.example.rent.util.LoginResultSingleton
 import com.example.rent.util.UserSingleton
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.security.auth.login.LoginException
 
+@HiltViewModel
 class LoginViewModel @Inject constructor(private val userRepository: UserRepositoryImpl) :
     ViewModel() {
 

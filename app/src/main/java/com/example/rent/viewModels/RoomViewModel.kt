@@ -9,10 +9,12 @@ import com.example.rent.data.models.Room
 import com.example.rent.data.models.User
 import com.example.rent.data.repositories.impl.RentalRepositoryImpl
 import com.example.rent.util.UserSingleton
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class RoomViewModel @Inject constructor(
     private val repository: RentalRepositoryImpl,
     private val coroutineScope: CoroutineScope
